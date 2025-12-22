@@ -71,9 +71,15 @@ export function isValidFileType(filename: string, allowedTypes: string[]): boole
  * Sanitize filename for safe storage
  */
 export function sanitizeFilename(filename: string): string {
-  return filename
-    .replace(/[^a-z0-9.-]/gi, '_')
-    .replace(/_{2,}/g, '_')
-    .toLowerCase();
+  // Replace non-alphanumeric characters (except dots and hyphens) with underscores
+  let sanitized = filename.replace(/[^a-z0-9.-]/gi, '_');
+  
+  // Collapse 3+ consecutive underscores to single underscore (preserves double underscores from spaces)
+  sanitized = sanitized.replace(/_{3,}/g, '_');
+  
+  // Collapse leading/trailing multiple underscores to single underscore
+  sanitized = sanitized.replace(/^_+/g, '_').replace(/_+$/g, '_');
+  
+  return sanitized.toLowerCase();
 }
 

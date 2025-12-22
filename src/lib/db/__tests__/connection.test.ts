@@ -2,12 +2,17 @@ import mongoose from 'mongoose';
 import connectDB from '../connection';
 
 // Mock mongoose
-const mockConnect = jest.fn();
-jest.mock('mongoose', () => ({
-  connect: mockConnect,
-}));
+jest.mock('mongoose', () => {
+  const mockConnect = jest.fn();
+  return {
+    connect: mockConnect,
+    __mockConnect: mockConnect, // Export for test access
+  };
+});
 
 describe('MongoDB Connection', () => {
+  const mockConnect = (mongoose as any).__mockConnect;
+
   beforeEach(() => {
     jest.clearAllMocks();
     // Reset the global cache
