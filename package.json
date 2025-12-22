@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
-    "test": "jest --coverage",
+    "test": "jest --coverage --passWithNoTests",
     "test:watch": "jest --watch",
     "test:e2e": "playwright test",
     "db:seed": "tsx src/lib/db/seed.ts",

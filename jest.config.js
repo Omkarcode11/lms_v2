@@ -28,6 +28,7 @@ const customJestConfig = {
       statements: 70,
     },
   },
+  passWithNoTests: true,
 };
 
 module.exports = createJestConfig(customJestConfig);

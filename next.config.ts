@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
   output: 'standalone',
+  outputFileTracingRoot: process.cwd(),
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
