@@ -33,7 +33,7 @@ export default function DashboardPage() {
     return null;
   }
 
-  const userRole = (session.user as any)?.role || 'STUDENT';
+  const userRole = (session.user as { role?: string })?.role || 'STUDENT';
 
   return (
     <div className="min-h-screen bg-background">

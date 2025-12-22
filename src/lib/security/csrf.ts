@@ -1,7 +1,6 @@
 import { nanoid } from 'nanoid';
 
 const CSRF_TOKEN_LENGTH = 32;
-const CSRF_COOKIE_NAME = 'csrf_token';
 
 /**
  * Generate a CSRF token
@@ -24,7 +23,7 @@ export function validateCsrfToken(token: string, cookieToken: string): boolean {
 /**
  * Get CSRF token from headers or body
  */
-export function getCsrfToken(headers: Headers, body?: any): string | null {
+export function getCsrfToken(headers: Headers, body?: Record<string, unknown>): string | null {
   // Check header first
   const headerToken = headers.get('x-csrf-token');
   if (headerToken) {

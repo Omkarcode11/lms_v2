@@ -53,13 +53,13 @@ export async function GET(
     
     // Get lessons for each module
     const modulesWithLessons = await Promise.all(
-      modules.map(async (module) => {
-        const lessons = await Lesson.find({ moduleId: module._id })
+      modules.map(async (moduleItem) => {
+        const lessons = await Lesson.find({ moduleId: moduleItem._id })
           .sort({ order: 1 })
           .lean();
         
         return {
-          ...module,
+          ...moduleItem,
           lessons,
         };
       })

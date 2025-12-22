@@ -30,14 +30,14 @@ async function seed() {
     console.log('Creating users...');
     const hashedPassword = await bcrypt.hash('password123', 10);
     
-    const admin = await User.create({
+    await User.create({
       email: 'admin@eduflow.com',
       name: 'Admin User',
       password: hashedPassword,
       role: UserRole.ADMIN,
     });
     
-    const instructor = await User.create({
+    await User.create({
       email: 'instructor@eduflow.com',
       name: 'John Instructor',
       password: hashedPassword,
@@ -45,7 +45,7 @@ async function seed() {
       bio: 'Experienced educator with 10+ years of teaching',
     });
     
-    const student = await User.create({
+    await User.create({
       email: 'student@eduflow.com',
       name: 'Jane Student',
       password: hashedPassword,

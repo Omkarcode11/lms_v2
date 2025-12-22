@@ -25,20 +25,29 @@ export function isValidEmail(email: string): boolean {
 /**
  * Sanitize MongoDB queries to prevent injection
  */
-export function sanitizeMongoQuery(query: any): any {
+export function sanitizeMongoQuery(query: unknown): unknown {
   if (typeof query !== 'object' || query === null) {
     return query;
   }
 
-  const sanitized: any = Array.isArray(query) ? [] : {};
+  if (Array.isArray(query)) {
+    const sanitized: unknown[] = [];
+    for (const item of query) {
+      sanitized.push(sanitizeMongoQuery(item));
+    }
+    return sanitized;
+  }
 
-  for (const key in query) {
+  const sanitized: Record<string, unknown> = {};
+  const queryObj = query as Record<string, unknown>;
+
+  for (const key in queryObj) {
     // Remove MongoDB operators from user input
     if (key.startsWith('$')) {
       continue;
     }
 
-    const value = query[key];
+    const value = queryObj[key];
 
     if (typeof value === 'object' && value !== null) {
       sanitized[key] = sanitizeMongoQuery(value);

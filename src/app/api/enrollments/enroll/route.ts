@@ -5,7 +5,7 @@ import { nanoid } from 'nanoid';
 import connectDB from '@/lib/db/connection';
 import Enrollment, { EnrollmentStatus } from '@/lib/db/models/Enrollment';
 import Course from '@/lib/db/models/Course';
-import Payment, { PaymentStatus, PaymentMethod } from '@/lib/db/models/Payment';
+import Payment, { PaymentStatus } from '@/lib/db/models/Payment';
 
 const enrollSchema = z.object({
   courseId: z.string(),

@@ -7,7 +7,7 @@ import Course from '@/lib/db/models/Course';
 // GET /api/enrollments/[id] - Get enrollment details
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -21,7 +21,8 @@ export async function GET(
     
     await connectDB();
     
-    const enrollment = await Enrollment.findById(params.id)
+    const { id } = await params;
+    const enrollment = await Enrollment.findById(id)
       .populate('courseId')
       .populate('userId', 'name email')
       .lean();

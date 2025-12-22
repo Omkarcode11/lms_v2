@@ -41,6 +41,7 @@ export default function CoursesPage() {
     if (session) {
       fetchEnrolledCourses();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory, selectedLevel, session]);
 
   const fetchCourses = async () => {
@@ -68,7 +69,9 @@ export default function CoursesPage() {
       if (res.ok) {
         const data = await res.json();
         const enrolledIds = new Set(
-          data.courses.map((c: any) => c.enrollment.courseId.id || c.enrollment.courseId._id)
+          data.courses.map((c: { enrollment: { courseId: { id?: string; _id?: string } } }) => 
+            c.enrollment.courseId.id || c.enrollment.courseId._id
+          )
         );
         setEnrolledCourseIds(enrolledIds);
       }
@@ -145,7 +148,7 @@ export default function CoursesPage() {
             </Link>
             {session ? (
               <>
-                {(session.user as any).role === 'INSTRUCTOR' && (
+                {(session.user as { role?: string }).role === 'INSTRUCTOR' && (
                   <Link href="/instructor">
                     <Button variant="outline">Instructor Dashboard</Button>
                   </Link>

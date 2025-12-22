@@ -19,12 +19,13 @@ const courseUpdateSchema = z.object({
 // GET /api/courses/[id] - Get course by ID with modules
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
     
-    const course = await Course.findById(params.id)
+    const { id } = await params;
+    const course = await Course.findById(id)
       .populate('instructorId', 'name email avatar bio')
       .lean();
     
@@ -36,7 +37,7 @@ export async function GET(
     }
     
     // Get modules with lessons
-    const modules = await Module.find({ courseId: params.id })
+    const modules = await Module.find({ courseId: id })
       .sort({ order: 1 })
       .populate('lessons')
       .lean();
@@ -57,7 +58,7 @@ export async function GET(
 // PUT /api/courses/[id] - Update course
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -71,7 +72,8 @@ export async function PUT(
     
     await connectDB();
     
-    const course = await Course.findById(params.id);
+    const { id } = await params;
+    const course = await Course.findById(id);
     
     if (!course) {
       return NextResponse.json(
@@ -97,12 +99,12 @@ export async function PUT(
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '');
-      (validatedData as any).slug = newSlug;
+      (validatedData as Record<string, unknown>).slug = newSlug;
     }
     
     // Update publishedAt if status changed to PUBLISHED
     if (validatedData.status === 'PUBLISHED' && course.status !== 'PUBLISHED') {
-      (validatedData as any).publishedAt = new Date();
+      (validatedData as Record<string, unknown>).publishedAt = new Date();
     }
     
     Object.assign(course, validatedData);
@@ -131,7 +133,7 @@ export async function PUT(
 // DELETE /api/courses/[id] - Delete course
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -145,7 +147,8 @@ export async function DELETE(
     
     await connectDB();
     
-    const course = await Course.findById(params.id);
+    const { id } = await params;
+    const course = await Course.findById(id);
     
     if (!course) {
       return NextResponse.json(
@@ -162,7 +165,7 @@ export async function DELETE(
       );
     }
     
-    await Course.findByIdAndDelete(params.id);
+    await Course.findByIdAndDelete(id);
     
     return NextResponse.json({
       message: 'Course deleted successfully',

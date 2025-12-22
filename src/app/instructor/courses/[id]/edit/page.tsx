@@ -21,7 +21,7 @@ interface Course {
 }
 
 export default function EditCourse() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   const params = useParams();
   const courseId = params.id as string;
@@ -43,6 +43,7 @@ export default function EditCourse() {
     if (status === 'authenticated') {
       fetchCourse();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, courseId]);
 
   const fetchCourse = async () => {

@@ -18,7 +18,7 @@ const updateCourseSchema = z.object({
 // GET /api/instructor/courses/[id] - Get single course details
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -32,7 +32,8 @@ export async function GET(
     
     await connectDB();
     
-    const course = await Course.findById(params.id).lean();
+    const { id } = await params;
+    const course = await Course.findById(id).lean();
     
     if (!course) {
       return NextResponse.json(
@@ -62,7 +63,7 @@ export async function GET(
 // PUT /api/instructor/courses/[id] - Update course
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -79,7 +80,8 @@ export async function PUT(
     
     await connectDB();
     
-    const course = await Course.findById(params.id);
+    const { id } = await params;
+    const course = await Course.findById(id);
     
     if (!course) {
       return NextResponse.json(
@@ -106,7 +108,7 @@ export async function PUT(
       // Check if new slug already exists
       const existingCourse = await Course.findOne({ 
         slug: newSlug,
-        _id: { $ne: params.id }
+        _id: { $ne: id }
       });
       
       if (existingCourse) {
@@ -116,12 +118,12 @@ export async function PUT(
         );
       }
       
-      (validatedData as any).slug = newSlug;
+      (validatedData as Record<string, unknown>).slug = newSlug;
     }
     
     // Set publishedAt when status changes to PUBLISHED
     if (validatedData.status === CourseStatus.PUBLISHED && !course.publishedAt) {
-      (validatedData as any).publishedAt = new Date();
+      (validatedData as Record<string, unknown>).publishedAt = new Date();
     }
     
     Object.assign(course, validatedData);
@@ -150,7 +152,7 @@ export async function PUT(
 // DELETE /api/instructor/courses/[id] - Delete course
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -164,7 +166,8 @@ export async function DELETE(
     
     await connectDB();
     
-    const course = await Course.findById(params.id);
+    const { id } = await params;
+    const course = await Course.findById(id);
     
     if (!course) {
       return NextResponse.json(

@@ -10,7 +10,7 @@ import Lesson from '@/lib/db/models/Lesson';
 // GET /api/instructor/courses/[id]/students - Get enrolled students with progress
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -24,7 +24,8 @@ export async function GET(
     
     await connectDB();
     
-    const course = await Course.findById(params.id);
+    const { id } = await params;
+    const course = await Course.findById(id);
     
     if (!course) {
       return NextResponse.json(
@@ -42,13 +43,13 @@ export async function GET(
     }
     
     // Get all enrollments for this course with user details
-    const enrollments = await Enrollment.find({ courseId: params.id })
+    const enrollments = await Enrollment.find({ courseId: id })
       .populate('userId', 'name email avatar')
       .sort({ enrolledAt: -1 })
       .lean();
     
     // Get total lessons count for the course
-    const modules = await Module.find({ courseId: params.id }).select('_id');
+    const modules = await Module.find({ courseId: id }).select('_id');
     const moduleIds = modules.map(m => m._id);
     const totalLessons = await Lesson.countDocuments({ moduleId: { $in: moduleIds } });
     

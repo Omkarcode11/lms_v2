@@ -14,14 +14,13 @@ export async function getPersonalizedRecommendations(userId: string, limit: numb
       .limit(10)
       .lean();
     
-    const enrolledCourses = enrollments.map((e: any) => e.courseId);
-    const categories = enrolledCourses.map((c: any) => c.category);
-    const levels = enrolledCourses.map((c: any) => c.level);
+    const enrolledCourses = enrollments.map((e: { courseId: { _id: unknown; category: string; level: string } }) => e.courseId);
+    const categories = enrolledCourses.map((c: { category: string }) => c.category);
     
     // Find similar courses not enrolled in
-    const query: any = {
+    const query: Record<string, unknown> = {
       status: 'PUBLISHED',
-      _id: { $nin: enrolledCourses.map((c: any) => c._id) },
+      _id: { $nin: enrolledCourses.map((c: { _id: unknown }) => c._id) },
     };
     
     if (categories.length > 0) {

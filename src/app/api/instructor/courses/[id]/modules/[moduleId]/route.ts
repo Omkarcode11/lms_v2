@@ -35,9 +35,9 @@ export async function PUT(
     const { id, moduleId } = await params;
     
     // Verify module exists and belongs to course
-    const module = await Module.findById(moduleId);
+    const moduleDoc = await Module.findById(moduleId);
     
-    if (!module || module.courseId.toString() !== id) {
+    if (!moduleDoc || moduleDoc.courseId.toString() !== id) {
       return NextResponse.json(
         { error: 'Module not found' },
         { status: 404 }
@@ -62,12 +62,12 @@ export async function PUT(
     }
     
     // Update module
-    Object.assign(module, validatedData);
-    await module.save();
+    Object.assign(moduleDoc, validatedData);
+    await moduleDoc.save();
     
     return NextResponse.json({
       message: 'Module updated successfully',
-      module,
+      module: moduleDoc,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -105,9 +105,9 @@ export async function DELETE(
     const { id, moduleId } = await params;
     
     // Verify module exists and belongs to course
-    const module = await Module.findById(moduleId);
+    const moduleDoc = await Module.findById(moduleId);
     
-    if (!module || module.courseId.toString() !== id) {
+    if (!moduleDoc || moduleDoc.courseId.toString() !== id) {
       return NextResponse.json(
         { error: 'Module not found' },
         { status: 404 }
@@ -135,7 +135,7 @@ export async function DELETE(
     await Lesson.deleteMany({ moduleId: moduleId });
     
     // Delete the module
-    await module.deleteOne();
+    await moduleDoc.deleteOne();
     
     return NextResponse.json({
       message: 'Module and all its lessons deleted successfully',

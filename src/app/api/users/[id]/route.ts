@@ -15,12 +15,13 @@ const userUpdateSchema = z.object({
 // GET /api/users/[id] - Get user profile
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
     
-    const user = await User.findById(params.id)
+    const { id } = await params;
+    const user = await User.findById(id)
       .select('-password')
       .lean();
     
@@ -44,7 +45,7 @@ export async function GET(
 // PUT /api/users/[id] - Update user profile
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -56,8 +57,10 @@ export async function PUT(
       );
     }
     
+    const { id } = await params;
+    
     // Check if user is updating their own profile or is admin
-    if (token.id !== params.id && token.role !== 'ADMIN') {
+    if (token.id !== id && token.role !== 'ADMIN') {
       return NextResponse.json(
         { error: 'Forbidden' },
         { status: 403 }
@@ -66,7 +69,7 @@ export async function PUT(
     
     await connectDB();
     
-    const user = await User.findById(params.id);
+    const user = await User.findById(id);
     
     if (!user) {
       return NextResponse.json(
@@ -80,7 +83,7 @@ export async function PUT(
     
     // Hash password if provided
     if (validatedData.password) {
-      (validatedData as any).password = await bcrypt.hash(validatedData.password, 10);
+      (validatedData as Record<string, unknown>).password = await bcrypt.hash(validatedData.password, 10);
     }
     
     Object.assign(user, validatedData);
@@ -88,7 +91,9 @@ export async function PUT(
     
     // Remove password from response
     const userResponse = user.toObject();
-    delete userResponse.password;
+    if ('password' in userResponse) {
+      delete (userResponse as { password?: string }).password;
+    }
     
     return NextResponse.json({
       message: 'User updated successfully',
@@ -113,7 +118,7 @@ export async function PUT(
 // DELETE /api/users/[id] - Delete user (Admin only)
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -127,7 +132,8 @@ export async function DELETE(
     
     await connectDB();
     
-    const user = await User.findByIdAndDelete(params.id);
+    const { id } = await params;
+    const user = await User.findByIdAndDelete(id);
     
     if (!user) {
       return NextResponse.json(

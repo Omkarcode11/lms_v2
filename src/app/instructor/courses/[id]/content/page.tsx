@@ -29,8 +29,7 @@ interface Module {
 }
 
 export default function CourseContent() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+  const { status } = useSession();
   const params = useParams();
   const courseId = params.id as string;
 
@@ -60,6 +59,7 @@ export default function CourseContent() {
     if (status === 'authenticated') {
       fetchModules();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, courseId]);
 
   const fetchModules = async () => {
@@ -160,8 +160,8 @@ export default function CourseContent() {
   const createLesson = async () => {
     if (!selectedModuleId) return;
 
-    const module = modules.find(m => m._id === selectedModuleId);
-    if (!module) return;
+    const moduleItem = modules.find(m => m._id === selectedModuleId);
+    if (!moduleItem) return;
 
     try {
       const res = await fetch(
@@ -169,10 +169,10 @@ export default function CourseContent() {
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ...lessonForm,
-            order: module.lessons.length + 1,
-          }),
+        body: JSON.stringify({
+          ...lessonForm,
+          order: moduleItem.lessons.length + 1,
+        }),
         }
       );
 
@@ -345,20 +345,20 @@ export default function CourseContent() {
           </Card>
         ) : (
           <div className="space-y-6">
-            {modules.map((module, moduleIndex) => (
-              <Card key={module._id} className="overflow-hidden">
+            {modules.map((moduleItem, moduleIndex) => (
+              <Card key={moduleItem._id} className="overflow-hidden">
                 <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-start">
                   <div className="flex-1">
                     <h2 className="text-xl font-semibold text-gray-900">
-                      Module {moduleIndex + 1}: {module.title}
+                      Module {moduleIndex + 1}: {moduleItem.title}
                     </h2>
-                    {module.description && (
-                      <p className="text-gray-600 mt-1">{module.description}</p>
+                    {moduleItem.description && (
+                      <p className="text-gray-600 mt-1">{moduleItem.description}</p>
                     )}
                   </div>
                   <div className="flex gap-2 ml-4">
                     <Button
-                      onClick={() => openEditModule(module)}
+                      onClick={() => openEditModule(moduleItem)}
                       variant="outline"
                       size="sm"
                     >
@@ -366,7 +366,7 @@ export default function CourseContent() {
                     </Button>
                     <Button
                       onClick={() => {
-                        setSelectedModuleId(module._id);
+                        setSelectedModuleId(moduleItem._id);
                         setShowLessonForm(true);
                       }}
                       variant="outline"
@@ -375,7 +375,7 @@ export default function CourseContent() {
                       Add Lesson
                     </Button>
                     <Button
-                      onClick={() => deleteModule(module._id)}
+                      onClick={() => deleteModule(moduleItem._id)}
                       variant="destructive"
                       size="sm"
                     >
@@ -384,13 +384,13 @@ export default function CourseContent() {
                   </div>
                 </div>
 
-                {module.lessons.length === 0 ? (
+                {moduleItem.lessons.length === 0 ? (
                   <div className="p-8 text-center text-gray-500">
-                    No lessons yet. Click "Add Lesson" to create one.
+                    No lessons yet. Click &quot;Add Lesson&quot; to create one.
                   </div>
                 ) : (
                   <div className="divide-y divide-gray-200">
-                    {module.lessons.map((lesson, lessonIndex) => (
+                    {moduleItem.lessons.map((lesson, lessonIndex) => (
                       <div key={lesson._id} className="px-6 py-4 hover:bg-gray-50">
                         <div className="flex items-start gap-4">
                           <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-semibold">

@@ -14,7 +14,8 @@ test.describe('Homepage', () => {
     await expect(page.getByText('Rich Content')).toBeVisible();
     await expect(page.getByText('Role-Based Access')).toBeVisible();
     await expect(page.getByText('Certifications')).toBeVisible();
-    await expect(page.getByText('AI-Powered')).toBeVisible();
+    // Use getByRole to avoid strict mode violation (AI-Powered appears in multiple places)
+    await expect(page.getByRole('heading', { name: 'AI-Powered' })).toBeVisible();
   });
 
   test('should have working navigation links', async ({ page }) => {

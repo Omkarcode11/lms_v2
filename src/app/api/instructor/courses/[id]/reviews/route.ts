@@ -7,7 +7,7 @@ import Review from '@/lib/db/models/Review';
 // GET /api/instructor/courses/[id]/reviews - Get course reviews
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -21,7 +21,8 @@ export async function GET(
     
     await connectDB();
     
-    const course = await Course.findById(params.id);
+    const { id } = await params;
+    const course = await Course.findById(id);
     
     if (!course) {
       return NextResponse.json(
@@ -38,7 +39,7 @@ export async function GET(
       );
     }
     
-    const reviews = await Review.find({ courseId: params.id })
+    const reviews = await Review.find({ courseId: id })
       .populate('userId', 'name email avatar')
       .sort({ createdAt: -1 })
       .lean();

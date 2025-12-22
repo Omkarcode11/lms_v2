@@ -31,7 +31,7 @@ interface Course {
 }
 
 export default function MyCourses() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
@@ -115,7 +115,7 @@ export default function MyCourses() {
         {/* Courses Grid */}
         {courses.length === 0 ? (
           <div className="bg-white rounded-lg shadow p-12 text-center">
-            <p className="text-gray-500 mb-4">You haven't enrolled in any courses yet.</p>
+            <p className="text-gray-500 mb-4">You haven&apos;t enrolled in any courses yet.</p>
             <Link href="/courses">
               <Button>Explore Courses</Button>
             </Link>

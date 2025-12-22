@@ -2,19 +2,25 @@ import mongoose from 'mongoose';
 import connectDB from '../connection';
 
 // Mock mongoose
+const mockConnect = jest.fn();
 jest.mock('mongoose', () => ({
-  connect: jest.fn(),
+  connect: mockConnect,
 }));
 
 describe('MongoDB Connection', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    global.mongooseCache = undefined;
+    // Reset the global cache
+    (global as any).mongooseCache = undefined;
+    mockConnect.mockClear();
+  });
+
+  afterEach(() => {
+    (global as any).mongooseCache = undefined;
   });
 
   it('should connect to MongoDB successfully', async () => {
-    const mockConnect = jest.fn().mockResolvedValue(mongoose);
-    (mongoose.connect as jest.Mock) = mockConnect;
+    mockConnect.mockResolvedValueOnce(mongoose);
 
     await connectDB();
 
@@ -29,18 +35,22 @@ describe('MongoDB Connection', () => {
   });
 
   it('should reuse existing connection', async () => {
-    const mockConnect = jest.fn().mockResolvedValue(mongoose);
-    (mongoose.connect as jest.Mock) = mockConnect;
+    mockConnect.mockResolvedValue(mongoose);
 
+    // First call
     await connectDB();
+    // Second call should reuse
     await connectDB();
 
+    // Should only connect once
     expect(mockConnect).toHaveBeenCalledTimes(1);
   });
 
   it('should handle connection errors', async () => {
     const mockError = new Error('Connection failed');
-    (mongoose.connect as jest.Mock).mockRejectedValue(mockError);
+    mockConnect.mockRejectedValueOnce(mockError);
+    // Reset cache for error test
+    (global as any).mongooseCache = undefined;
 
     await expect(connectDB()).rejects.toThrow('Connection failed');
   });

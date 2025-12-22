@@ -120,7 +120,7 @@ export default function InstructorDashboard() {
 
           {courses.length === 0 ? (
             <div className="p-12 text-center">
-              <p className="text-gray-500 mb-4">You haven't created any courses yet.</p>
+              <p className="text-gray-500 mb-4">You haven&apos;t created any courses yet.</p>
               <Link href="/instructor/courses/create">
                 <Button>Create Your First Course</Button>
               </Link>

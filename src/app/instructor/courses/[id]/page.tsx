@@ -52,6 +52,7 @@ export default function InstructorCourseDetail() {
     if (status === 'authenticated') {
       fetchReviews();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, session, router, courseId]);
 
   const fetchReviews = async () => {

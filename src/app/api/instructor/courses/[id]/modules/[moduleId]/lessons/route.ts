@@ -39,9 +39,9 @@ export async function POST(
     const { id, moduleId } = await params;
     
     // Verify module exists and belongs to course
-    const module = await Module.findById(moduleId);
+    const moduleDoc = await Module.findById(moduleId);
     
-    if (!module || module.courseId.toString() !== id) {
+    if (!moduleDoc || moduleDoc.courseId.toString() !== id) {
       return NextResponse.json(
         { error: 'Module not found' },
         { status: 404 }

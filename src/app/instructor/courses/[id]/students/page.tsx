@@ -49,6 +49,7 @@ export default function CourseStudents() {
     if (status === 'authenticated') {
       fetchStudents();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, session, router, courseId]);
 
   const fetchStudents = async () => {

@@ -43,7 +43,7 @@ interface Course {
 }
 
 export default function StudentCourseView() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   const params = useParams();
   const courseId = params.id as string;
@@ -67,6 +67,7 @@ export default function StudentCourseView() {
     if (status === 'authenticated') {
       fetchProgress();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, router, courseId]);
 
   const fetchProgress = async () => {
@@ -80,8 +81,8 @@ export default function StudentCourseView() {
         
         // Set first incomplete lesson as current
         if (data.modules && data.modules.length > 0) {
-          for (const module of data.modules) {
-            const incompleteLesson = module.lessons.find((l: Lesson) => !l.completed);
+          for (const moduleItem of data.modules) {
+            const incompleteLesson = moduleItem.lessons.find((l: Lesson) => !l.completed);
             if (incompleteLesson) {
               setCurrentLesson(incompleteLesson);
               break;
@@ -103,7 +104,7 @@ export default function StudentCourseView() {
     }
   };
 
-  const toggleLessonComplete = async (lessonId: string, currentStatus: boolean) => {
+  const toggleLessonComplete = async (lessonId: string, _currentStatus: boolean) => {
     console.log('toggleLessonComplete called with lessonId:', lessonId);
     
     if (!lessonId) {
@@ -165,8 +166,8 @@ export default function StudentCourseView() {
         let foundCurrent = false;
         let nextLesson: Lesson | null = null;
         
-        for (const module of modules) {
-          for (const lesson of module.lessons) {
+        for (const moduleItem of modules) {
+          for (const lesson of moduleItem.lessons) {
             if (foundCurrent && !nextLesson) {
               nextLesson = lesson;
               break;
@@ -292,7 +293,7 @@ export default function StudentCourseView() {
             <div className="text-6xl mb-4">📚</div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">No Content Yet</h2>
             <p className="text-gray-600 mb-4">
-              The instructor hasn't added any modules or lessons to this course yet.
+              The instructor hasn&apos;t added any modules or lessons to this course yet.
             </p>
             <p className="text-sm text-gray-500">
               Check back later for course content!
@@ -355,17 +356,17 @@ export default function StudentCourseView() {
 
             {/* Course Content Sidebar */}
             <div className="space-y-4">
-              {modules.map((module) => (
-                <Card key={module.id} className="overflow-hidden">
+              {modules.map((moduleItem) => (
+                <Card key={moduleItem.id} className="overflow-hidden">
                   <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
-                    <h3 className="font-semibold text-gray-900">{module.title}</h3>
+                    <h3 className="font-semibold text-gray-900">{moduleItem.title}</h3>
                     <div className="text-sm text-gray-600 mt-1">
-                      {module.completedCount} / {module.totalCount} lessons • {module.progressPercentage}%
+                      {moduleItem.completedCount} / {moduleItem.totalCount} lessons • {moduleItem.progressPercentage}%
                     </div>
                   </div>
 
                   <div className="divide-y divide-gray-200">
-                    {module.lessons.map((lesson) => (
+                    {moduleItem.lessons.map((lesson) => (
                       <button
                         key={lesson.id}
                         onClick={() => setCurrentLesson(lesson)}

@@ -7,7 +7,7 @@ import Course from '@/lib/db/models/Course';
 // DELETE /api/reviews/[id] - Delete a review
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -21,7 +21,8 @@ export async function DELETE(
     
     await connectDB();
     
-    const review = await Review.findById(params.id);
+    const { id } = await params;
+    const review = await Review.findById(id);
     
     if (!review) {
       return NextResponse.json(
