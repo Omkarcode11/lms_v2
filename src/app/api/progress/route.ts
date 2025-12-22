@@ -20,6 +20,13 @@ export async function GET(req: NextRequest) {
       );
     }
     
+    if (!req.url) {
+      return NextResponse.json(
+        { error: 'Invalid request URL' },
+        { status: 400 }
+      );
+    }
+    
     const { searchParams } = new URL(req.url);
     const courseId = searchParams.get('courseId');
     

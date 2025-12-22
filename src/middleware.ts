@@ -21,6 +21,9 @@ export async function middleware(request: NextRequest) {
 
   // Protected routes
   if (!isPublicRoute && !token) {
+    if (!request.url) {
+      return NextResponse.next();
+    }
     const url = new URL('/auth/signin', request.url);
     url.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(url);
@@ -28,11 +31,17 @@ export async function middleware(request: NextRequest) {
 
   // Admin routes
   if (pathname.startsWith('/admin') && token?.role !== 'ADMIN') {
+    if (!request.url) {
+      return NextResponse.next();
+    }
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
   // Instructor routes
   if (pathname.startsWith('/instructor') && token?.role !== 'INSTRUCTOR' && token?.role !== 'ADMIN') {
+    if (!request.url) {
+      return NextResponse.next();
+    }
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 

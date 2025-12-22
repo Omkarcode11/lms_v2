@@ -21,6 +21,17 @@ jobs:
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
+      - name: Check Vercel token
+        id: check-token
+        run: |
+          if [ -z "${{ secrets.VERCEL_TOKEN }}" ]; then
+            echo "❌ VERCEL_TOKEN secret is required"
+            echo "Please add it in: Repository Settings → Secrets and variables → Actions → Repository secrets"
+            echo "Or in: Repository Settings → Environments → production → Environment secrets"
+            exit 1
+          fi
+          echo "✅ Vercel token found"
+
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 

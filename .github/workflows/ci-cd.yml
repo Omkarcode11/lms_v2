@@ -133,6 +133,7 @@ jobs:
           DATABASE_URL: mongodb://localhost:27017/eduflow_lms
           NEXTAUTH_SECRET: build-secret-key
           NEXTAUTH_URL: http://localhost:3000
+          NEXT_PUBLIC_APP_URL: http://localhost:3000
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4

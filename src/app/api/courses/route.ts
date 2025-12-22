@@ -19,6 +19,13 @@ export async function GET(req: NextRequest) {
   try {
     await connectDB();
     
+    if (!req.url) {
+      return NextResponse.json(
+        { error: 'Invalid request URL' },
+        { status: 400 }
+      );
+    }
+    
     const { searchParams } = new URL(req.url);
     const category = searchParams.get('category');
     const level = searchParams.get('level');
