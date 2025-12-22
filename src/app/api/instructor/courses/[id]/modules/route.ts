@@ -113,13 +113,13 @@ export async function POST(
       );
     }
     
-    const module = await Module.create({
+    const newModule = await Module.create({
       ...validatedData,
       courseId: id,
     });
     
     return NextResponse.json(
-      { message: 'Module created successfully', module },
+      { message: 'Module created successfully', module: newModule },
       { status: 201 }
     );
   } catch (error) {

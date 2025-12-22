@@ -187,8 +187,8 @@ export async function POST(req: NextRequest) {
     }
     
     // Check if user is enrolled in the course
-    const module = await Module.findById(lesson.moduleId);
-    if (!module) {
+    const lessonModule = await Module.findById(lesson.moduleId);
+    if (!lessonModule) {
       return NextResponse.json(
         { error: 'Module not found' },
         { status: 404 }
@@ -197,7 +197,7 @@ export async function POST(req: NextRequest) {
     
     const enrollment = await Enrollment.findOne({
       userId: token.id,
-      courseId: module.courseId,
+      courseId: lessonModule.courseId,
     });
     
     if (!enrollment) {
@@ -225,7 +225,7 @@ export async function POST(req: NextRequest) {
     );
     
     // Recalculate course progress
-    const courseModules = await Module.find({ courseId: module.courseId }).select('_id');
+    const courseModules = await Module.find({ courseId: lessonModule.courseId }).select('_id');
     const courseModuleIds = courseModules.map(m => m._id);
     const courseLessons = await Lesson.find({ moduleId: { $in: courseModuleIds } }).select('_id');
     const courseLessonIds = courseLessons.map(l => l._id);

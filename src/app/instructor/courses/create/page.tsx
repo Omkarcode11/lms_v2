@@ -59,7 +59,7 @@ export default function CreateCourse() {
     );
   }
 
-  if (status === 'unauthenticated' || (session?.user?.role !== 'INSTRUCTOR' && session?.user?.role !== 'ADMIN')) {
+  if (status === 'unauthenticated' || ((session?.user as { role?: string }).role !== 'INSTRUCTOR' && (session?.user as { role?: string })?.role !== 'ADMIN')) {
     router.push('/auth/signin');
     return null;
   }
@@ -107,7 +107,7 @@ export default function CreateCourse() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="price">Price (USD) *</Label>
+                <Label htmlFor="price">Price (₹) *</Label>
                 <Input
                   id="price"
                   type="number"

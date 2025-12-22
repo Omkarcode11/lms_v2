@@ -7,7 +7,7 @@ export enum UserRole {
 }
 
 export interface IUser extends Document {
-  _id: string;
+  _id: mongoose.Types.ObjectId;
   email: string;
   name: string;
   password: string;
@@ -57,10 +57,10 @@ const UserSchema = new Schema<IUser>(
     timestamps: true,
     toJSON: {
       transform: (_, ret) => {
-        ret.id = ret._id.toString();
-        delete ret._id;
-        delete ret.__v;
-        delete ret.password;
+        ret.id = ret._id.toString() as unknown as string;
+        delete (ret as unknown as { _id?: mongoose.Types.ObjectId })._id;
+        delete (ret as unknown as { __v?: number }).__v;
+        delete (ret as unknown as { password?: string }).password;
         return ret;
       },
     },

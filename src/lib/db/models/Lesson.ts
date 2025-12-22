@@ -8,7 +8,7 @@ export enum ContentType {
 }
 
 export interface ILesson extends Document {
-  _id: string;
+  _id: mongoose.Types.ObjectId;
   moduleId: mongoose.Types.ObjectId;
   title: string;
   description?: string;
@@ -66,9 +66,9 @@ const LessonSchema = new Schema<ILesson>(
     timestamps: true,
     toJSON: {
       transform: (_, ret) => {
-        ret.id = ret._id.toString();
-        delete ret._id;
-        delete ret.__v;
+        ret.id = ret._id.toString() as unknown as string;
+        delete (ret as unknown as { _id?: mongoose.Types.ObjectId })._id;
+        delete (ret as unknown as { __v?: number }).__v;
         return ret;
       },
     },

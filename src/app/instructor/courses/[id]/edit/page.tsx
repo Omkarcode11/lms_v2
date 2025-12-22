@@ -152,7 +152,7 @@ export default function EditCourse() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="price">Price (USD) *</Label>
+                <Label htmlFor="price">Price (₹) *</Label>
                 <Input
                   id="price"
                   type="number"

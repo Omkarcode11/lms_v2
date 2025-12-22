@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRouter, useParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -418,14 +418,14 @@ export default function CourseContent() {
                           </div>
                           <div className="flex gap-2">
                             <Button
-                              onClick={() => openEditLesson(module._id, lesson)}
+                              onClick={() => openEditLesson(moduleItem._id, lesson)}
                               variant="outline"
                               size="sm"
                             >
                               Edit
                             </Button>
                             <Button
-                              onClick={() => deleteLesson(module._id, lesson._id)}
+                              onClick={() => deleteLesson(moduleItem._id, lesson._id)}
                               variant="destructive"
                               size="sm"
                             >

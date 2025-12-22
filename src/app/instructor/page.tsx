@@ -40,7 +40,7 @@ export default function InstructorDashboard() {
       return;
     }
 
-    if (status === 'authenticated' && session?.user?.role !== 'INSTRUCTOR' && session?.user?.role !== 'ADMIN') {
+    if (status === 'authenticated' && (session?.user as { role?: string }).role !== 'INSTRUCTOR' && (session?.user as { role?: string })?.role !== 'ADMIN') {
       router.push('/dashboard');
       return;
     }
@@ -102,7 +102,7 @@ export default function InstructorDashboard() {
           </Card>
           <Card className="p-6">
             <div className="text-sm text-gray-600 mb-1">Total Revenue</div>
-            <div className="text-3xl font-bold text-gray-900">${totalRevenue.toFixed(2)}</div>
+            <div className="text-3xl font-bold text-gray-900">₹{totalRevenue.toFixed(2)}</div>
           </Card>
           <Card className="p-6">
             <div className="text-sm text-gray-600 mb-1">Published Courses</div>
@@ -156,7 +156,7 @@ export default function InstructorDashboard() {
                       <td className="px-6 py-4">
                         <div>
                           <div className="text-sm font-medium text-gray-900">{course.title}</div>
-                          <div className="text-sm text-gray-500">${course.price.toFixed(2)}</div>
+                          <div className="text-sm text-gray-500">₹{course.price.toFixed(2)}</div>
                         </div>
                       </td>
                       <td className="px-6 py-4">
@@ -180,7 +180,7 @@ export default function InstructorDashboard() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm text-gray-900">
-                          ${course.stats.totalRevenue.toFixed(2)}
+                          ₹{course.stats.totalRevenue.toFixed(2)}
                         </div>
                       </td>
                       <td className="px-6 py-4">

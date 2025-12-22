@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
         courseId: courseId,
         enrollmentId: enrollment._id,
         amount: course.price,
-        currency: 'USD',
+        currency: 'INR',
         status: PaymentStatus.COMPLETED,
         method: paymentMethod,
         transactionId: `MOCK_${nanoid(16)}`,

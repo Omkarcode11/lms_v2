@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import connectDB from '@/lib/db/connection';
 import Enrollment from '@/lib/db/models/Enrollment';
-import Course from '@/lib/db/models/Course';
 
 // GET /api/enrollments/[id] - Get enrollment details
 export async function GET(

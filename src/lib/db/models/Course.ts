@@ -7,7 +7,7 @@ export enum CourseStatus {
 }
 
 export interface ICourse extends Document {
-  _id: string;
+  _id: mongoose.Types.ObjectId;
   title: string;
   slug: string;
   description: string;
@@ -108,8 +108,8 @@ const CourseSchema = new Schema<ICourse>(
     toJSON: {
       transform: (_, ret) => {
         ret.id = ret._id.toString();
-        delete ret._id;
-        delete ret.__v;
+        delete (ret as unknown as { _id?: mongoose.Types.ObjectId })._id;
+        delete (ret as unknown as { __v?: number }).__v;
         return ret;
       },
     },

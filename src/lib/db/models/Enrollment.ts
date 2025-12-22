@@ -7,7 +7,7 @@ export enum EnrollmentStatus {
 }
 
 export interface IEnrollment extends Document {
-  _id: string;
+  _id: mongoose.Types.ObjectId;
   userId: mongoose.Types.ObjectId;
   courseId: mongoose.Types.ObjectId;
   status: EnrollmentStatus;
@@ -66,8 +66,8 @@ const EnrollmentSchema = new Schema<IEnrollment>(
     toJSON: {
       transform: (_, ret) => {
         ret.id = ret._id.toString();
-        delete ret._id;
-        delete ret.__v;
+        delete (ret as unknown as { _id?: mongoose.Types.ObjectId })._id;
+        delete (ret as unknown as { __v?: number }).__v;
         return ret;
       },
     },

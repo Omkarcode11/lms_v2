@@ -41,7 +41,7 @@ export default function CourseStudents() {
       return;
     }
 
-    if (status === 'authenticated' && session?.user?.role !== 'INSTRUCTOR' && session?.user?.role !== 'ADMIN') {
+    if (status === 'authenticated' && ((session?.user as { role?: string }).role !== 'INSTRUCTOR' && (session?.user as { role?: string })?.role !== 'ADMIN')) {
       router.push('/dashboard');
       return;
     }
@@ -204,7 +204,7 @@ export default function CourseStudents() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm text-gray-900">
-                          ${student.enrollment.paidAmount.toFixed(2)}
+                          ₹{student.enrollment.paidAmount.toFixed(2)}
                         </div>
                       </td>
                     </tr>

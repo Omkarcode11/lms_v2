@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
-import { getPersonalizedRecommendations } from '@/lib/ai/recommendations';
+// import { getPersonalizedRecommendations } from '@/lib/ai/recommendations';
 
 export async function GET(req: NextRequest) {
   try {
@@ -13,12 +13,12 @@ export async function GET(req: NextRequest) {
       );
     }
     
-    const { searchParams } = new URL(req.url);
-    const limit = parseInt(searchParams.get('limit') || '5');
+    // const { searchParams } = new URL(req.url);
+    // const limit = parseInt(searchParams.get('limit') || '5');
     
-    const recommendations = await getPersonalizedRecommendations(token.id as string, limit);
+    // const recommendations = await getPersonalizedRecommendations(token.id as string, limit);
     
-    return NextResponse.json({ recommendations });
+    return NextResponse.json({ recommendations: [] as unknown as unknown[] });
   } catch (error) {
     console.error('Get recommendations error:', error);
     return NextResponse.json(

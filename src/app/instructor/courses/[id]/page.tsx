@@ -44,7 +44,7 @@ export default function InstructorCourseDetail() {
       return;
     }
 
-    if (status === 'authenticated' && session?.user?.role !== 'INSTRUCTOR' && session?.user?.role !== 'ADMIN') {
+    if (status === 'authenticated' && ((session?.user as { role?: string }).role !== 'INSTRUCTOR' && (session?.user as { role?: string })?.role !== 'ADMIN')) {
       router.push('/dashboard');
       return;
     }

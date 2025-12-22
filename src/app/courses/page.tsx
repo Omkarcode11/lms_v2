@@ -68,10 +68,12 @@ export default function CoursesPage() {
       const res = await fetch('/api/students/my-courses');
       if (res.ok) {
         const data = await res.json();
-        const enrolledIds = new Set(
-          data.courses.map((c: { enrollment: { courseId: { id?: string; _id?: string } } }) => 
-            c.enrollment.courseId.id || c.enrollment.courseId._id
-          )
+        const enrolledIds = new Set<string>(
+          data.courses
+            .map((c: { enrollment: { courseId: { id?: string; _id?: string } } }) => 
+              c.enrollment.courseId.id || c.enrollment.courseId._id
+            )
+            .filter((id: string | undefined): id is string => typeof id === 'string')
         );
         setEnrolledCourseIds(enrolledIds);
       }
@@ -341,7 +343,7 @@ export default function CoursesPage() {
                         {course.price === 0 ? (
                           <span className="text-2xl font-bold text-green-600">Free</span>
                         ) : (
-                          <span className="text-2xl font-bold">${course.price.toFixed(2)}</span>
+                          <span className="text-2xl font-bold">₹{course.price.toFixed(2)}</span>
                         )}
                       </div>
                       {enrolled ? (

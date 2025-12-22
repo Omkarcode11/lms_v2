@@ -32,7 +32,8 @@ export function getCsrfToken(headers: Headers, body?: Record<string, unknown>): 
 
   // Check body
   if (body && typeof body === 'object') {
-    return body.csrfToken || null;
+    const token = body.csrfToken;
+    return typeof token === 'string' ? token : null;
   }
 
   return null;
