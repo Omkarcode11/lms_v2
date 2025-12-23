@@ -80,10 +80,10 @@ export default function Home() {
             Built with Next.js 16, MongoDB, TypeScript, and Tailwind CSS
           </p>
           <div className="flex gap-4 justify-center items-center">
-            <span>Your Name</span>
+            <span>Omkar Sonawane</span>
             <span>•</span>
             <a
-              href="https://github.com/yourusername"
+              href="https://github.com/Omkarcode11"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-primary"
@@ -92,7 +92,7 @@ export default function Home() {
             </a>
             <span>•</span>
             <a
-              href="https://linkedin.com/in/yourprofile"
+              href="https://linkedin.com/in/omkardev"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-primary"

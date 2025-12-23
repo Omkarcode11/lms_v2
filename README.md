@@ -1,10 +1,10 @@
 # 🎓 EduFlow LMS - Modern Learning Management System
-
 <p align="center">
   <strong>A production-ready, AI-powered Learning Management System built with Next.js 16, MongoDB, and modern web technologies</strong>
 </p>
 
 <p align="center">
+  <a href="https://lmsv2-lovat.vercel.app/" target="_blank">🌐 Live Demo</a> •
   <a href="#features">Features</a> •
   <a href="#tech-stack">Tech Stack</a> •
   <a href="#getting-started">Getting Started</a> •
@@ -200,6 +200,10 @@ npm start
 ```
 
 ## 🌐 Deployment
+
+### Live Application
+
+🌐 **Live Demo**: [https://lmsv2-lovat.vercel.app/](https://lmsv2-lovat.vercel.app/)
 
 ### Vercel (Recommended)
 
